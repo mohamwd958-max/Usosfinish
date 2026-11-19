@@ -55,7 +55,7 @@ main{position:absolute;top:62px;bottom:0;left:270px;right:0;direction:rtl;overfl
 /* job rows: centred title + description, wide strip: 3 photos + a quarter of the 4th */
 .job{max-width:1100px;margin:0 auto 22px;border-radius:24px;padding:20px 22px 12px}
 .job h3{text-align:center;font-size:24px}
-.job p{text-align:center;color:var(--mut);font-size:14px;margin:4px 0 16px}
+.job p{text-align:center;color:var(--mut);font-size:14px;margin:4px 0 10px}
 .strip{--g:16px;display:flex;direction:ltr;gap:var(--g);overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 12px;scrollbar-width:none;cursor:grab;-webkit-overflow-scrolling:touch}
 .strip::-webkit-scrollbar{display:none}
 .strip.dg{cursor:grabbing;scroll-snap-type:none}
@@ -115,6 +115,17 @@ main{position:absolute;top:62px;bottom:0;left:270px;right:0;direction:rtl;overfl
 .cell b{font-size:20px;position:relative}
 .cell small{color:rgba(255,255,255,.82);font-size:13px;position:relative;margin-top:2px}
 .cells.dg{cursor:grabbing;scroll-snap-type:none}
+.job{position:relative}
+.job p:empty{display:none}
+.meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 14px}
+.meta:empty{display:none}
+.meta span{background:rgba(255,255,255,.12);border:1px solid var(--gb);border-radius:999px;padding:4px 14px;font-size:13px;font-weight:700}
+.edbtn{position:absolute;top:14px;left:16px;border:1px solid var(--gb);background:rgba(255,255,255,.14);border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700}
+.egal{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:6px}
+.eg{position:relative}.eg img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;display:block}
+.eg button{position:absolute;top:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:12px;padding:0;cursor:pointer}
+.eg button[data-a=d]{right:4px}.eg button[data-a=r]{left:4px}
+.mine button[data-a=e]{color:var(--ink)}
 /* overlays */
 .ov{position:fixed;inset:0;background:rgba(10,12,16,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:10;padding:16px}
 .ov.on{display:flex}
@@ -147,6 +158,7 @@ input[type=file]{width:100%;font-size:13px}
 .sp button{padding:12px 22px;border-radius:999px;background:var(--glass);border:1px solid var(--gb);font-weight:700;font-size:16px;backdrop-filter:blur(14px)}
 @keyframes slideL{from{opacity:0;transform:translateX(-44px)}}
 @keyframes slideR{from{opacity:0;transform:translateX(44px)}}
+@media(max-width:760px){.rate{height:auto;min-height:112px;flex-direction:column;justify-content:center;gap:8px;padding:14px 18px;text-align:center}.rate .sc{justify-content:center}.rv{flex:none;width:100%;text-align:center;white-space:normal;overflow:visible;min-height:3em;line-height:1.5;display:flex;align-items:center;justify-content:center}}
 @media(max-width:1100px){.ov{padding-bottom:calc(68px + 100px + env(safe-area-inset-bottom,0px))}.box{max-height:calc(100vh - 68px - 100px - 40px);max-height:calc(100dvh - 68px - 100px - 40px)}#zoom img{max-height:calc(100vh - 68px - 100px - 40px);max-height:calc(100dvh - 68px - 100px - 40px)}aside{display:none}main{left:0;bottom:68px;padding:24px 16px}#bar{display:flex}#pgName{display:block}}
 </style>
 </head>
@@ -199,11 +211,28 @@ input[type=file]{width:100%;font-size:13px}
   <h3>رفع صور</h3>
   <label>1) مكان الرفع</label><select id="place"></select>
   <label>2) العنوان</label><input type="text" id="ttl" placeholder="اكتب العنوان">
+  <div class="two"><div><label>التكلفة</label><input type="text" id="cst" placeholder="مثال: 45,000 ج.م"></div><div><label>المدة</label><input type="text" id="dur" placeholder="مثال: 12 يوم"></div></div>
+  <label>الموقع</label><input type="text" id="loc" placeholder="مثال: القاهرة الجديدة">
+  <div class="two"><div><label>عدد الغرف</label><input type="text" id="rms" placeholder="مثال: 3"></div><div><label>أو المساحة الإجمالية</label><input type="text" id="area" placeholder="مثال: 120 م²"></div></div>
   <label>3) الصورة أو مجموعة الصور</label><input type="file" id="files" accept="image/*" multiple>
   <div class="thumbs" id="th"></div>
   <div class="err" id="perr"></div>
   <div class="row"><button class="btn rp" id="save">حفظ</button><button class="btn g rp" id="out">تسجيل خروج</button><button class="btn g rp" data-close>إغلاق</button></div>
   <div class="mine" id="mine"></div>
+</div></div>
+
+<div class="ov" id="ed"><div class="box wide glass">
+  <h3>تعديل الإعلان</h3>
+  <label>المكان</label><select id="edPlace"></select>
+  <label>العنوان</label><input type="text" id="edT">
+  <label>الوصف</label><input type="text" id="edD">
+  <div class="two"><div><label>التكلفة</label><input type="text" id="edC" placeholder="مثال: 45,000 ج.م"></div><div><label>المدة</label><input type="text" id="edU" placeholder="مثال: 12 يوم"></div></div>
+  <label>الموقع</label><input type="text" id="edL">
+  <div class="two"><div><label>عدد الغرف</label><input type="text" id="edRm"></div><div><label>أو المساحة الإجمالية</label><input type="text" id="edA"></div></div>
+  <label>الصور (↻ استبدال، ✕ حذف)</label><div class="egal" id="edG"></div>
+  <button class="btn g rp" id="edAdd" type="button">+ إضافة صور</button><input type="file" id="edF" accept="image/*" multiple hidden><input type="file" id="edR" accept="image/*" hidden>
+  <div class="err" id="edErr"></div>
+  <div class="row"><button class="btn rp" id="edSave">حفظ</button><button class="btn g rp" data-close>إلغاء</button><button class="btn g rp" id="edDel" style="margin-inline-start:auto;color:#ff9b8f">حذف الإعلان</button></div>
 </div></div>
 
 <div class="ov" id="gal"><div class="box wide glass"><h3 id="galT"></h3><div class="gal" id="galG"></div></div></div>
@@ -230,8 +259,14 @@ const DEMO = { paint: [['شغلانة نوفمبر 1', 'دهان شقة سكني
 const demoImgs = (j, n) => Array.from({ length: n }, (_, i) => 'https://picsum.photos/seed/os' + j + '-' + i + '/640/480');
 
 const jget = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
-const load = () => jget(KEY, []);
-const store = list => { try { localStorage.setItem(KEY, JSON.stringify(list)); return true; } catch (e) { return false; } };
+const LKEY = 'os_listings_v2';
+function load() {
+  const l = jget(LKEY, null); if (l) return l;
+  const m = {}; jget(KEY, []).forEach(x => { const g = x.place + '|' + x.title; (m[g] = m[g] || { id: x.id, place: x.place, title: x.title, desc: '', cost: '', dur: '', imgs: [] }).imgs.push(x.img); });
+  return Object.values(m);
+}
+const store = list => { try { localStorage.setItem(LKEY, JSON.stringify(list)); return true; } catch (e) { return false; } };
+const DEMO_META = [['45,000 ج.م', '12 يوم', 'القاهرة الجديدة', '3 غرف', ''], ['120,000 ج.م', '3 أسابيع', 'الشيخ زايد', '', '350 م²'], ['30,000 ج.م', '7 أيام', 'مدينة نصر', '', '90 م²']];
 
 /* ---- public side ---- */
 let current = null;
@@ -240,27 +275,30 @@ function renderSide() {
     '<div class="grp"><button class="h rp" data-k="' + s.id + '"><span>' + s.name + '</span><i>‹</i></button><div class="subs">' +
     s.subs.map(b => '<button class="rp" data-k="' + b[0] + '">' + b[1] + '</button>').join('') + '</div></div>').join('');
 }
-function jobRow(title, desc, imgs) {
+function jobRow(title, desc, imgs, meta) {
+  meta = meta || {};
   const r = document.createElement('section'); r.className = 'job glass';
   const h = document.createElement('h3'); h.textContent = title;
   const p = document.createElement('p'); p.textContent = desc;
   const st = document.createElement('div'); st.className = 'strip';
   imgs.forEach(u => { const f = document.createElement('div'); f.className = 'shot'; const i = document.createElement('img'); i.loading = 'lazy'; i.alt = ''; i.draggable = false; i.src = u; i.onerror = () => i.remove(); f.appendChild(i); st.appendChild(f); });
-  r._imgs = imgs; r._title = title; r.append(h, p, st); return r;
+  const m = document.createElement('div'); m.className = 'meta';
+  [['التكلفة', meta.cost], ['المدة', meta.dur], ['الموقع', meta.loc], ['الغرف', meta.rooms], ['المساحة', meta.area]].forEach(c => { if (c[1]) { const e = document.createElement('span'); e.textContent = c[0] + ': ' + c[1]; m.appendChild(e); } });
+  if (meta.id && isAdmin()) { const b = document.createElement('button'); b.type = 'button'; b.className = 'edbtn rp'; b.dataset.id = meta.id; b.textContent = '✎ تعديل'; r.appendChild(b); }
+  r._imgs = imgs; r._title = title; r.append(h, p, m, st); return r;
 }
 function show(k) {
   stopHome(); current = k; const f = FLAT[k];
   document.querySelectorAll('#side [data-k]').forEach(b => b.classList.toggle('on', b.dataset.k === k));
-  const groups = {}; load().filter(x => x.place === k).forEach(x => (groups[x.title] = groups[x.title] || []).push(x.img));
-  const jobs = Object.keys(groups).map(t => [t, groups[t].length + ' صورة', groups[t]]);
-  if (!jobs.length && DEMO[k]) DEMO[k].forEach((d, j) => jobs.push([d[0], d[1], demoImgs(j + 1, d[2])]));
+  const jobs = load().filter(x => x.place === k).map(x => [x.title, x.desc || '', x.imgs, { id: x.id, cost: x.cost, dur: x.dur, loc: x.loc, rooms: x.rooms, area: x.area }]);
+  if (!jobs.length && DEMO[k]) DEMO[k].forEach((d, j) => jobs.push([d[0], d[1], demoImgs(j + 1, d[2]), { cost: DEMO_META[j][0], dur: DEMO_META[j][1], loc: DEMO_META[j][2], rooms: DEMO_META[j][3], area: DEMO_META[j][4] }]));
   $('main').innerHTML = '<div class="view"><h2></h2><div class="path"></div><div id="rows"></div></div>';
   $('main').querySelector('h2').textContent = f.name;
   $('main').querySelector('.path').textContent = f.parent ? f.parent.name + ' ‹ ' + f.name : f.name;
   const rows = $('rows');
   if (!f.parent) sectionPills(rows, k);
   else if (!jobs.length) rows.innerHTML = '<div class="ph"><span>' + f.icon + '</span><p>' + f.name + '</p></div>';
-  stopRates(); jobs.forEach(j => { rows.appendChild(jobRow(j[0], j[1], j[2])); rows.appendChild(rateRow()); }); startRates();
+  stopRates(); jobs.forEach(j => { rows.appendChild(jobRow(j[0], j[1], j[2], j[3])); rows.appendChild(rateRow()); }); startRates();
   $('main').scrollTop = 0; chrome(); anim(); hist();
 }
 /* ---- main page ---- */
@@ -367,6 +405,7 @@ $('side').addEventListener('click', pick);
 $('main').addEventListener('click', e => {
   if (e.target.closest('.strip, .cells') && stripMoved) return;
   const cl = e.target.closest('.cell'); if (cl) { go(cl.dataset.k); return; }
+  const eb = e.target.closest('.edbtn'); if (eb) { openEdit(eb.dataset.id); return; }
   const sp = e.target.closest('.sp button'); if (sp) { go(sp.dataset.k); return; }
   const sh = e.target.closest('.shot'); if (sh) { const j = sh.closest('.job'); openGal(j._title, j._imgs); return; }
   const rt = e.target.closest('.rate'); if (rt) { openRev(); return; }
@@ -429,8 +468,8 @@ document.addEventListener('pointerdown', e => {
 
 /* overlays: close buttons; click outside closes (for the "register?" box that means: later) */
 document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => b.closest('.ov').classList.remove('on'));
-document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'panel') o.classList.remove('on'); }));
-document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'panel') o.classList.remove('on'); }); });
+document.querySelectorAll('.ov').forEach(o => o.addEventListener('pointerdown', e => { if (e.target === o && o.id !== 'panel' && o.id !== 'ed') o.classList.remove('on'); }));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.ov.on').forEach(o => { if (o.id !== 'panel' && o.id !== 'ed') o.classList.remove('on'); }); });
 
 /* ---- profile / registration ---- */
 const PERSON = '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/></svg>';
@@ -466,17 +505,18 @@ $('logo').onclick = () => $('admBtn').classList.toggle('show');
 const isAdmin = () => sessionStorage.getItem('os_admin') === '1';
 $('admBtn').onclick = () => { if (isAdmin()) openPanel(); else { $('u').value = ''; $('p').value = ''; $('lerr').textContent = ''; $('login').classList.add('on'); $('u').focus(); } };
 function tryLogin() {
-  if (ADMIN.user.includes($('u').value.trim().toLowerCase()) && $('p').value === ADMIN.pass) { sessionStorage.setItem('os_admin', '1'); $('login').classList.remove('on'); openPanel(); }
+  if (ADMIN.user.includes($('u').value.trim().toLowerCase()) && $('p').value === ADMIN.pass) { sessionStorage.setItem('os_admin', '1'); $('login').classList.remove('on'); openPanel(); if (current !== null) show(current); }
   else $('lerr').textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
 }
 $('lgo').onclick = tryLogin;
 ['u', 'p'].forEach(id => $(id).addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); }));
-$('out').onclick = () => { sessionStorage.removeItem('os_admin'); $('panel').classList.remove('on'); $('admBtn').classList.remove('show'); };
+$('out').onclick = () => { sessionStorage.removeItem('os_admin'); $('panel').classList.remove('on'); $('ed').classList.remove('on'); $('admBtn').classList.remove('show'); if (current !== null) show(current); };
+const placeHTML = () => SECTIONS.map(s => '<optgroup label="' + s.name + '"><option value="' + s.id + '">' + s.name + ' (القسم كله)</option>' +
+  s.subs.map(b => '<option value="' + b[0] + '">' + b[1] + '</option>').join('') + '</optgroup>').join('');
 function openPanel() {
-  $('place').innerHTML = SECTIONS.map(s => '<optgroup label="' + s.name + '"><option value="' + s.id + '">' + s.name + ' (القسم كله)</option>' +
-    s.subs.map(b => '<option value="' + b[0] + '">' + b[1] + '</option>').join('') + '</optgroup>').join('');
+  $('place').innerHTML = placeHTML();
   if (current) $('place').value = current;
-  $('perr').textContent = ''; $('th').innerHTML = ''; $('files').value = ''; $('ttl').value = '';
+  $('perr').textContent = ''; $('th').innerHTML = ''; $('files').value = ''; $('ttl').value = ''; $('cst').value = ''; $('dur').value = ''; $('loc').value = ''; $('rms').value = ''; $('area').value = '';
   renderMine(); $('panel').classList.add('on');
 }
 $('files').onchange = () => { $('th').innerHTML = ''; [...$('files').files].forEach(f => { const i = new Image(); i.src = URL.createObjectURL(f); $('th').appendChild(i); }); };
@@ -497,23 +537,61 @@ $('save').onclick = async () => {
   if (!files.length) { err.textContent = 'اختر صورة أو أكثر'; return; }
   err.textContent = 'جارٍ الحفظ...';
   try {
-    const list = load(), place = $('place').value;
-    for (const f of files) list.push({ id: Date.now() + Math.random().toString(36).slice(2, 6), place, title, img: await shrink(f) });
+    const list = load(), imgs = [];
+    for (const f of files) imgs.push(await shrink(f));
+    list.push({ id: Date.now() + Math.random().toString(36).slice(2, 6), place: $('place').value, title, desc: '', cost: $('cst').value.trim(), dur: $('dur').value.trim(), loc: $('loc').value.trim(), rooms: $('rms').value.trim(), area: $('area').value.trim(), imgs });
     if (!store(list)) { err.textContent = 'المساحة امتلأت (localStorage). احذف بعض الصور أو قلّل العدد.'; return; }
     err.className = 'err ok'; err.textContent = 'تم الحفظ ✓ (' + files.length + ')';
-    $('files').value = ''; $('th').innerHTML = ''; $('ttl').value = '';
+    $('files').value = ''; $('th').innerHTML = ''; $('ttl').value = ''; $('cst').value = ''; $('dur').value = ''; $('loc').value = ''; $('rms').value = ''; $('area').value = '';
     renderMine(); if (current) show(current);
   } catch (e) { err.textContent = 'تعذّر قراءة الصورة'; }
 };
 function renderMine() {
-  const list = load();
-  $('mine').innerHTML = '<b>المرفوع (' + list.length + ')</b>' + list.map(x => '<div data-id="' + x.id + '"><span></span><button title="حذف">✕</button></div>').join('');
-  [...$('mine').querySelectorAll('div')].forEach((d, i) => { const f = FLAT[list[i].place]; d.querySelector('span').innerHTML = '<small></small> '; d.querySelector('small').textContent = f.name + ' • '; d.querySelector('span').append(list[i].title); });
+  const list = load(); $('mine').innerHTML = '<b>الإعلانات (' + list.length + ')</b>';
+  list.forEach(x => {
+    const d = document.createElement('div'); d.dataset.id = x.id;
+    const sp = document.createElement('span'), sm = document.createElement('small'); sm.textContent = (FLAT[x.place] ? FLAT[x.place].name : '') + ' • '; sp.append(sm, x.title + ' (' + x.imgs.length + ')');
+    const e = document.createElement('button'); e.dataset.a = 'e'; e.title = 'تعديل'; e.textContent = '✎';
+    const r = document.createElement('button'); r.dataset.a = 'd'; r.title = 'حذف'; r.textContent = '✕';
+    d.append(sp, e, r); $('mine').appendChild(d);
+  });
 }
+function delListing(id) { if (!confirm('حذف هذا الإعلان نهائيًا؟')) return false; store(load().filter(x => x.id !== id)); renderMine(); if (current !== null) show(current); return true; }
 $('mine').addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  store(load().filter(x => x.id !== b.parentNode.dataset.id)); renderMine(); if (current) show(current);
+  const b = e.target.closest('button'); if (!b) return; const id = b.parentNode.dataset.id;
+  if (b.dataset.a === 'e') openEdit(id); else if (b.dataset.a === 'd') delListing(id);
 });
+
+/* ---- edit a listing: title, text, cost, duration, place, and its pictures (replace / delete / add) ---- */
+let edId = null, edImgs = [], edRep = -1;
+function renderEdImgs() {
+  $('edG').innerHTML = '';
+  edImgs.forEach((u, i) => { const w = document.createElement('div'); w.className = 'eg'; const im = new Image(); im.src = u; im.alt = '';
+    const r = document.createElement('button'); r.type = 'button'; r.dataset.a = 'r'; r.dataset.i = i; r.title = 'استبدال'; r.textContent = '↻';
+    const d = document.createElement('button'); d.type = 'button'; d.dataset.a = 'd'; d.dataset.i = i; d.title = 'حذف'; d.textContent = '✕';
+    w.append(im, r, d); $('edG').appendChild(w); });
+}
+function openEdit(id) {
+  const x = load().find(y => y.id === id); if (!x) return;
+  edId = id; edImgs = x.imgs.slice(); $('edPlace').innerHTML = placeHTML(); $('edPlace').value = x.place;
+  $('edT').value = x.title; $('edD').value = x.desc || ''; $('edC').value = x.cost || ''; $('edU').value = x.dur || ''; $('edL').value = x.loc || ''; $('edRm').value = x.rooms || ''; $('edA').value = x.area || '';
+  $('edErr').textContent = ''; renderEdImgs(); $('ed').classList.add('on');
+}
+$('edG').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; const i = +b.dataset.i;
+  if (b.dataset.a === 'd') { edImgs.splice(i, 1); renderEdImgs(); } else { edRep = i; $('edR').click(); }
+});
+$('edR').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f || edRep < 0) return; try { edImgs[edRep] = await shrink(f); renderEdImgs(); } catch (x) { $('edErr').textContent = 'تعذّر قراءة الصورة'; } };
+$('edAdd').onclick = () => $('edF').click();
+$('edF').onchange = async e => { const fs = [...e.target.files]; e.target.value = ''; try { for (const f of fs) edImgs.push(await shrink(f)); renderEdImgs(); } catch (x) { $('edErr').textContent = 'تعذّر قراءة الصورة'; } };
+$('edSave').onclick = () => {
+  const t = $('edT').value.trim(); if (!t) { $('edErr').textContent = 'اكتب العنوان'; return; } if (!edImgs.length) { $('edErr').textContent = 'لازم صورة واحدة على الأقل'; return; }
+  const list = load(), x = list.find(y => y.id === edId); if (!x) return;
+  Object.assign(x, { place: $('edPlace').value, title: t, desc: $('edD').value.trim(), cost: $('edC').value.trim(), dur: $('edU').value.trim(), loc: $('edL').value.trim(), rooms: $('edRm').value.trim(), area: $('edA').value.trim(), imgs: edImgs.slice() });
+  if (!store(list)) { $('edErr').textContent = 'المساحة امتلأت (localStorage). قلّل الصور أو احذف إعلانات.'; return; }
+  $('ed').classList.remove('on'); renderMine(); if (current !== null) show(current);
+};
+$('edDel').onclick = () => { if (delListing(edId)) $('ed').classList.remove('on'); };
 
 /* ---- Back button: goes one step back inside the app (closes a popup first) and never leaves the app ---- */
 let histCur = 'home', popping = false, ovPushed = false;
